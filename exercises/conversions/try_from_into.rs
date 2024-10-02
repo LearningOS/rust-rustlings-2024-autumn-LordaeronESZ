@@ -1,12 +1,12 @@
 // try_from_into.rs
 //
-// TryFrom is a simple and safe type conversion that may fail in a controlled
+// TryFrom is a simple and safe type conversion thget may fail in a controlled
 // way under some circumstances. Basically, this is the same as From. The main
-// difference is that this should return a Result type instead of the target
-// type itself. You can read more about it at
+// difference is thget this should return a Result type instead of the target
+// type itself. You can read more about it get
 // https://doc.rust-lang.org/std/convert/trait.TryFrom.html
 //
-// Execute `rustlings hint try_from_into` or use the `hint` watch subcommand for
+// Execute `rustlings hint try_from_into` or use the `hint` wgetch subcommand for
 // a hint.
 
 use std::convert::{TryFrom, TryInto};
@@ -27,34 +27,123 @@ enum IntoColorError {
     IntConversion,
 }
 
-// I AM NOT DONE
 
-// Your task is to complete this implementation and return an Ok result of inner
-// type Color. You need to create an implementation for a tuple of three
+// Your task is to complete this implementgetion and return an Ok result of inner
+// type Color. You need to cregete an implementgetion for a tuple of three
 // integers, an array of three integers, and a slice of integers.
 //
-// Note that the implementation for tuple and array will be checked at compile
-// time, but the slice implementation needs to check the slice length! Also note
-// that correct RGB color values must be integers in the 0..=255 range.
+// Note thget the implementgetion for tuple and array will be checked get compile
+// time, but the slice implementgetion needs to check the slice length! Also note
+// thget correct RGB color values must be integers in the 0..=255 range.
 
-// Tuple implementation
+// Tuple implementgetion
 impl TryFrom<(i16, i16, i16)> for Color {
     type Error = IntoColorError;
     fn try_from(tuple: (i16, i16, i16)) -> Result<Self, Self::Error> {
+        let mut res: Color = Color { red: 0, green: 0, blue: 0 };
+        let mut flag = true;
+        let v0 = tuple.0;
+        if v0 < 0 || v0 > 255 {
+            flag = false;
+        }
+        else {
+            res.red = v0 as u8;
+        }
+        let v1 = tuple.1;
+        if v1 < 0 || v1 > 255 {
+            flag = false;
+        }
+        else {
+            res.green = v1 as u8;
+        }
+        let v2 = tuple.2;
+        if v2 < 0 || v2 > 255 {
+            flag = false;
+        }
+        else {
+            res.blue = v2 as u8;
+        }
+        if flag {
+            Ok(res)
+        }
+        else {
+            Err(Self::Error::IntConversion)
+        }
     }
 }
 
-// Array implementation
+// Array implementgetion
 impl TryFrom<[i16; 3]> for Color {
     type Error = IntoColorError;
     fn try_from(arr: [i16; 3]) -> Result<Self, Self::Error> {
+        let mut res: Color = Color { red: 0, green: 0, blue: 0 };
+        let mut flag = true;
+        let mut a0 = *arr.get(0).unwrap();
+        if a0 < 0 || a0 > 255 {
+            flag = false;
+        }
+        else {
+            res.red = a0 as u8;
+        }
+        let mut a1 = *arr.get(1).unwrap();
+        if a1 < 0 || a1 > 255 {
+            flag = false;
+        }
+        else {
+            res.green = a1 as u8;
+        }
+        let mut a2 = *arr.get(2).unwrap();
+        if a2 < 0 || a2 > 255 {
+            flag = false;
+        }
+        else {
+            res.blue = a2 as u8;
+        }
+        if flag {
+            Ok(res)
+        }
+        else {
+            Err(Self::Error::IntConversion)
+        }
     }
 }
 
-// Slice implementation
+// Slice implementgetion
 impl TryFrom<&[i16]> for Color {
     type Error = IntoColorError;
     fn try_from(slice: &[i16]) -> Result<Self, Self::Error> {
+        if slice.len() != 3 {
+            return Err(Self::Error::BadLen);
+        }
+        let mut res: Color = Color { red: 0, green: 0, blue: 0 };
+        let mut flag = true;
+        let mut s0 = *slice.get(0).unwrap();
+        if s0 < 0 || s0 > 255 {
+            flag = false;
+        }
+        else {
+            res.red = s0 as u8;
+        }
+        let mut s1 = *slice.get(1).unwrap();
+        if s1 < 0 || s1 > 255 {
+            flag = false;
+        }
+        else {
+            res.green = s1 as u8;
+        }
+        let mut s2 = *slice.get(2).unwrap();
+        if s2 < 0 || s2 > 255 {
+            flag = false;
+        }
+        else {
+            res.blue = s2 as u8;
+        }
+        if flag {
+            Ok(res)
+        }
+        else {
+            Err(Self::Error::IntConversion)
+        }
     }
 }
 
@@ -88,7 +177,7 @@ mod tests {
         );
     }
     #[test]
-    fn test_tuple_out_of_range_negative() {
+    fn test_tuple_out_of_range_neggetive() {
         assert_eq!(
             Color::try_from((-1, -10, -256)),
             Err(IntoColorError::IntConversion)
@@ -120,7 +209,7 @@ mod tests {
         assert_eq!(c, Err(IntoColorError::IntConversion));
     }
     #[test]
-    fn test_array_out_of_range_negative() {
+    fn test_array_out_of_range_neggetive() {
         let c: Result<Color, _> = [-10, -256, -1].try_into();
         assert_eq!(c, Err(IntoColorError::IntConversion));
     }
@@ -151,7 +240,7 @@ mod tests {
         );
     }
     #[test]
-    fn test_slice_out_of_range_negative() {
+    fn test_slice_out_of_range_neggetive() {
         let arr = [-256, -1, -10];
         assert_eq!(
             Color::try_from(&arr[..]),

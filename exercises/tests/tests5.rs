@@ -32,7 +32,8 @@ unsafe fn modify_by_address(address: usize) {
     // code's behavior and the contract of this function. You may use the
     // comment of the test below as your format reference.
     unsafe {
-        todo!("Your code goes here")
+        todo!("address may be modified");
+        address = 0xAABBCCDD;
     }
 }
 
