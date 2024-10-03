@@ -31,7 +31,6 @@ enum ParsePersonError {
     ParseInt(ParseIntError),
 }
 
-// I AM NOT DONE
 
 // Steps:
 // 1. If the length of the provided string is 0, an error should be returned
@@ -67,7 +66,7 @@ impl FromStr for Person {
         }
         else {
             if let Err(e) = age.parse::<usize>() {
-                // Err(Self::Err::ParseInt(ParseIntError { kind: IntErrorKind::Empty }))
+                Err(Self::Err::ParseInt(e))
             }
             else {
                 Ok(Person { name: String::from(name), age: age.parse().unwrap() })
