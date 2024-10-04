@@ -51,6 +51,7 @@ where
     // Insert a value into the BST
     fn insert(&mut self, value: T) {
         //TODO
+        
     }
 
     // Search for a value in the BST
