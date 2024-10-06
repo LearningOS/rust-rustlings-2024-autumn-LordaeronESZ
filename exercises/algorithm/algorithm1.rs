@@ -69,10 +69,15 @@ impl<T> LinkedList<T> {
             },
         }
     }
-	pub fn merge(list_a: LinkedList<T>, list_b: LinkedList<T>) -> Self
+	pub fn merge<T: Ord + Default>(list_a: LinkedList<T>, list_b: LinkedList<T>) -> Self
 	{
 		//TODO
-        // let merged_list = Self::new();
+        let head1 = list_a.start;
+        let head2 = list_b.start;
+        let head3 = Some(NonNull::new(Node::new(T::default())));
+        while head1 != None && head2 != None {
+            
+        }
 	}
 }
 
