@@ -2,7 +2,6 @@
 	single linked list merge
 	This problem requires you to merge two ordered singly linked lists into one ordered singly linked list
 */
-// I AM NOT DONE
 
 use std::fmt::{self, Display, Formatter};
 use std::ptr::NonNull;
@@ -69,15 +68,49 @@ impl<T> LinkedList<T> {
             },
         }
     }
-	pub fn merge<T: Ord + Default>(list_a: LinkedList<T>, list_b: LinkedList<T>) -> Self
+}
+
+impl<T: Ord + Clone> LinkedList<T> {
+    pub fn merge(list_a: LinkedList<T>, list_b: LinkedList<T>) -> Self
 	{
 		//TODO
-        let head1 = list_a.start;
-        let head2 = list_b.start;
-        let head3 = Some(NonNull::new(Node::new(T::default())));
-        while head1 != None && head2 != None {
-            
+        // here is a memory-waste algorithm,
+        // not a in-place merged algorithm,
+        // which limits the generics T to the one implements the Clone trait
+        let mut merged_list: LinkedList<T> = LinkedList::new();
+        let mut head_a = list_a.start;
+        let mut head_b = list_b.start;
+        // let mut head3 = Some(NonNull::new(Node::new(T::default())));
+        while head_a != None || head_b != None {
+            let opt_a = head_a.map(|ptr| unsafe {
+                &(*ptr.as_ptr()).val
+            });
+            let opt_b = head_b.map(|ptr| unsafe {
+                &(*ptr.as_ptr()).val
+            });
+
+            match (opt_a, opt_b) {
+                (Some(val_a), Some(val_b)) => {
+                    if val_a <= val_b {
+                        merged_list.add(val_a.clone());
+                        head_a = unsafe { (*head_a.unwrap().as_ptr()).next };
+                    } else {
+                        merged_list.add(val_b.clone());
+                        head_b = unsafe { (*head_b.unwrap().as_ptr()).next };
+                    }
+                }
+                (Some(val_a), None) => {
+                    merged_list.add(val_a.clone());
+                    head_a = unsafe { (*head_a.unwrap().as_ptr()).next };
+                }
+                (None, Some(val_b)) => {
+                    merged_list.add(val_b.clone());
+                    head_b = unsafe { (*head_b.unwrap().as_ptr()).next };
+                }
+                (_, _) => break,
+            }
         }
+        merged_list
 	}
 }
 
